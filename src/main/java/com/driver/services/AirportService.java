@@ -198,4 +198,50 @@ public class AirportService {
 
         return airportRepository.getNumberOfPeopleWhoBookedFlight(flightId);
     }
+
+    public Optional<Boolean> bookATicket(Integer flightId, Integer passengerId) {
+
+        Optional<Flight> optionalFlight = getFlight(flightId);
+        if(optionalFlight.isEmpty()) return Optional.empty();
+
+        Flight currFlight = optionalFlight.get();
+
+        if(getNumberOfPeopleWhoBookedFlight(flightId).get() >= currFlight.getMaxCapacity())
+            return Optional.empty();
+
+        Optional<List<Integer>> optionalPassengers = getAllPassengerOnFlight(flightId);
+        if(optionalPassengers.isEmpty()) return Optional.empty();
+
+        List<Integer> allPassengers = optionalPassengers.get();
+
+        if(allPassengers.contains(passengerId))
+            return Optional.empty();
+
+        airportRepository.bookATicket(flightId,passengerId);
+
+        return Optional.of(Boolean.TRUE);
+    }
+
+    private Optional<List<Integer>> getAllPassengerOnFlight(Integer flightId) {
+
+        return airportRepository.getAllPassengerOnFlight(flightId);
+
+    }
+
+    public Optional<Boolean> cancelATicket(Integer flightId, Integer passengerId) {
+
+        Optional<Flight> optionalFlight = getFlight(flightId);
+        if(optionalFlight.isEmpty()) return Optional.empty();
+
+        Optional<List<Integer>> optionalBookingHistory = getBookingHistory(passengerId);
+        if(optionalBookingHistory.isEmpty()) return Optional.empty();
+
+        if(!optionalBookingHistory.get().contains(flightId))
+            return Optional.empty();
+
+        airportRepository.cancelATicket(flightId,passengerId);
+
+        return Optional.of(Boolean.TRUE);
+
+    }
 }

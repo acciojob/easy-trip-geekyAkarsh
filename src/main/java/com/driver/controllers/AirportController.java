@@ -46,7 +46,7 @@ public class AirportController {
         Optional<Double> optionalDuration = airportService.getShortestDurationOfPossibleBetweenTwoCities(fromCity,toCity);
 
         if(optionalDuration.isPresent()) return optionalDuration.get();
-        return -1;
+        return -1.0;
     }
 
     @GetMapping("/get-number-of-people-on-airport-on/{date}")
@@ -82,7 +82,9 @@ public class AirportController {
         //Also if the passenger has already booked a flight then also return "FAILURE".
         //else if you are able to book a ticket then return "SUCCESS"
 
-        return null;
+        Optional<Boolean> bookTicket = airportService.bookATicket(flightId,passengerId);
+        if(bookTicket.isEmpty()) return "FAILURE";
+        return "SUCCESS";
     }
 
     @PutMapping("/cancel-a-ticket")
@@ -93,7 +95,9 @@ public class AirportController {
         // Otherwise return a "SUCCESS" message
         // and also cancel the ticket that passenger had booked earlier on the given flightId
 
-       return null;
+        Optional<Boolean> cancelTicket = airportService.cancelATicket(flightId,passengerId);
+        if(cancelTicket.isEmpty()) return "FAILURE";
+       return "SUCCESS";
     }
 
 
@@ -140,6 +144,7 @@ public class AirportController {
         //Calculate the total revenue that a flight could have
         //That is of all the passengers that have booked a flight till now and then calculate the revenue
         //Revenue will also decrease if some passenger cancels the flight
+
 
 
         return 0;
