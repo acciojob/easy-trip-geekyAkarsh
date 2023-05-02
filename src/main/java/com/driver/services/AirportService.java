@@ -98,7 +98,7 @@ public class AirportService {
         Optional<List<Flight>> optionalFlights = getAllFlights();
         if(optionalFlights.isEmpty()) return Optional.empty();
 
-        Double minDuration = 0.0;
+        Double minDuration = Double.MAX_VALUE;
         List<Flight> allFlights = optionalFlights.get();
         for(Flight curr : allFlights){
 
